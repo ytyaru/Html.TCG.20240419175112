@@ -21,7 +21,7 @@ class Game {
         turn.run()
     }
     end() { // 閉
-
+        // 勝敗判定・通知
     }
 }
 class Turn {
@@ -44,49 +44,34 @@ class Turn {
         }
     }
 }
-/*
 class Phase {
-    constructor(areas) {
-        this.areas = areas
-        this.items = [new StartPhase(), new SetupPhase(), new ActPhase(), new EndPhase()]
-        this.turns = -1
-        this.phase = -1
-    }
-    run() {
-        this.turns++
-        const side = Math.floor(this.turns/2) // 0:先攻の番, 1:後攻の番
-        const attacker = this.areas[ side]
-        const defender = this.areas[!side]
-        for (let phase of this.items) {
-            phase.run(turns, side, attacker, defender)
-            this.phase++
-        }
+    constructor(name) { this.name = name; }
+    start(turns, side, attacker, defender, append='') {
+        console.log(`${turns}回目 ${((0===side) ? '先' : '後')} ${this.name}${((''===append) ? '' : append)}`)
     }
 }
-*/
-class Phase {
-    start(turns, side, attacker, defender) {
-        console.log(`${turns}回目 ${((0===side) ? '先' : '後')} 始`)
-    }
-}
-class StartPhase { // 始
+class StartPhase extends Phase { // 始
+    constructor() { super('始') }
     run(turns, side, attacker, defender) {
-        console.log(`${turns}回目 始`)
-        console.log(`${turns}回目 ${((0===side) ? '先' : '後')} 始`)
+        super.start(turns, side, attacker, defender)
+//        console.log(`${turns}回目 ${((0===side) ? '先' : '後')} 始`)
     }
 }
-class SetupPhase { // 備
+class SetupPhase extends Phase { // 備
+    constructor() { super('備') }
     run(turns, side, attacker, defender) {
         this.#draw(turns, side, attacker, defender)
         this.#put(turns, side, attacker, defender)
         this.#swap(turns, side, attacker, defender)
     }
     #draw(turns, side, attacker, defender) { // 山札から一枚引き手札に加える
-        console.log(`${turns}回目 ${((0===side) ? '先' : '後')} 備 DRAW`)
+        super.start(turns, side, attacker, defender, 'DRAW')
+//        console.log(`${turns}回目 ${((0===side) ? '先' : '後')} 備 DRAW`)
         attacker.hands.push(attacker.stocks.pop())
     }
     #put(turns, side, attacker, defender) { // 手札から戦場に一枚出す
-        console.log(`${turns}回目 ${((0===side) ? '先' : '後')} 備 PUT`)
+        super.start(turns, side, attacker, defender, 'PUT')
+//        console.log(`${turns}回目 ${((0===side) ? '先' : '後')} 備 PUT`)
         if (0===attacker.hands.length) { return } // 手札があれば
         for (let field of attacker.fields) {
             if (0===field.servants.length) { // この席が空なら
@@ -95,12 +80,15 @@ class SetupPhase { // 備
         }
     }
     #swap(turns, side, attacker, defender) {
-        console.log(`${turns}回目 ${((0===side) ? '先' : '後')} 備 SWAP`)
+        super.start(turns, side, attacker, defender, 'SWAP')
+//        console.log(`${turns}回目 ${((0===side) ? '先' : '後')} 備 SWAP`)
     }
 }
-class ActPhase { // 動
+class ActPhase extends Phase { // 動
+    constructor() { super('動') }
     run(turns, side, attacker, defender) {
-        console.log(`${turns}回目 ${((0===side) ? '先' : '後')} 動`)
+        super.start(turns, side, attacker, defender)
+//        console.log(`${turns}回目 ${((0===side) ? '先' : '後')} 動`)
         for (let f=0; f<attacker.fields.length; f++) {
             const field = attacker.fields[f]
             if (0===field.servants.length) { continue }
@@ -128,9 +116,11 @@ class ActPhase { // 動
         }
     }
 }
-class EndPhase { // 終
+class EndPhase extends Phase { // 終
+    constructor() { super('動') }
     run(turns, side, attacker, defender) {
-        console.log(`${turns}回目 ${((0===side) ? '先' : '後')} 終`)
+        super.start(turns, side, attacker, defender)
+        //console.log(`${turns}回目 ${((0===side) ? '先' : '後')} 終`)
     }
 }
 class Rule { // ルール（勝敗引分を決定するルール）

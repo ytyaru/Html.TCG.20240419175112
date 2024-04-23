@@ -36,13 +36,18 @@ class Skill {
         Counter:2,      // 反撃
         Deffence:3,     // 防御
         Avoidance:4,    // 回避
+        Cover:5,        // 庇う
+        Foist:6,        // 押し付け
+        Spread:7,       // 分散
         Absorption:5,   // 吸収
         Recovery:6,     // 回復
         Revival:7,      // 復活
         Strengthen:8,   // 強化
         Weaken:9,       // 弱化
         Restrictions:10,// 行動制限
-        CardControll:11,// 札操作
+        Swap:nn,          // 移動
+        PlaceControll:nn, // 場操作
+        CardControll:11,  // 札操作
     }
     static Target = { // 座席位置Post、重段位置Page、札種別Kind
         Front:0,       // 正面　　　　　　　　　範囲：正面。対象：一人　　■　
@@ -65,7 +70,7 @@ class Skill {
         // 発生条件:Occurrence conditions
         // 消失条件:Vanishing condition
     }
-    getTargets(turns, side, attacker, defender, f) {
+    getTargets(turns, side, attacker, defender, f) { // 対象決定
         if (Skill.Type.Attack===this.type) {
             if (Skill.Target.Front===this.target) {
                 const field = defender.fields[f]
@@ -81,6 +86,12 @@ class Skill {
                 console.log(`${op.name}が${this.point}のダメージを受けた。`)
             }
         }
+    }
+    #damage() { // ダメージ処理
+
+    }
+    #death() { // 死亡処理
+
     }
 }
 class Effect { // 効果
